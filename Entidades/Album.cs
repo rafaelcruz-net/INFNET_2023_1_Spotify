@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Entidades
 {
-    public class Playlist
+    public class Album
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public bool IsPublica { get; set;}
-        public Usuario Usuario { get; set; }
-        public List<Musica> Musicas { get; set;}
+        public Banda Banda { get; set; }
+        public List<Musica> Musicas { get; set; }
     }
 }
