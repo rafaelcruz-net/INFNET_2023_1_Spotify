@@ -19,6 +19,8 @@ namespace Repository.Mapping
             builder.Property(x => x.Nome).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Descricao).HasMaxLength(500);
             builder.Property(x => x.FotoBanda).HasMaxLength(500);
+
+            builder.HasMany(x => x.Albuns).WithOne(x => x.Banda);
         }
     }
 }
