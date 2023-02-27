@@ -13,7 +13,7 @@ namespace Repository
     {
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
-        public DbSet<Banda> Bands { get; set; }
+        public DbSet<Banda> Bandas { get; set; }
         public DbSet<Album> Albums { get; set; }
         public DbSet<Musica> Musicas { get; set; }
 

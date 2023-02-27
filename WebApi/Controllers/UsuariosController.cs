@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Entidades;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Validations;
 using Repository;
 
@@ -41,20 +42,69 @@ namespace WebApi.Controllers
 
         // POST api/<UsuariosController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Usuario usuario)
         {
+            if (ModelState.IsValid == false)
+                return BadRequest(ModelState);
+
+            var user = this.context.Usuarios.FirstOrDefault(x => x.Email == usuario.Email);
+
+            if (user != null)
+            {
+                return UnprocessableEntity(new
+                {
+                    Errors = "Email já cadastrado na base de dados, por favor utilize outro"
+                });
+            }
+
+            this.context.Usuarios.Add(usuario);
+            this.context.SaveChanges();
+
+            return Created($"/usuarios/{usuario.Id}", usuario);
         }
 
         // PUT api/<UsuariosController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] Usuario usuarioNew)
         {
+            if (ModelState.IsValid == false)
+                return BadRequest(ModelState);
+
+            var user = this.context.Usuarios.FirstOrDefault(x => x.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Nome = usuarioNew.Nome;
+            user.Email = usuarioNew.Email;
+            user.DtNascimento = usuarioNew.DtNascimento;
+            user.Password = usuarioNew.Password;
+
+            this.context.Usuarios.Update(user);
+            this.context.SaveChanges();
+
+            return Ok(user);
+
         }
 
         // DELETE api/<UsuariosController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            var user = this.context.Usuarios.FirstOrDefault(x => x.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            this.context.Usuarios.Remove(user);
+            this.context.SaveChanges();
+
+            return NoContent();
+
         }
     }
 }

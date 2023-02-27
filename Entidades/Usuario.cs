@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace Entidades
 {
@@ -9,10 +10,19 @@ namespace Entidades
             this.Playlists = new List<Playlist>();
         }
 
-        public int Id { get; set; }   
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Nome é Obrigatório")]
         public string Nome { get; set;}
+        
+        [Required(ErrorMessage = "Email é Obrigatório")]
+        [EmailAddress(ErrorMessage = "Email não está em um formato correto")]
         public String Email { get; set; }
+
+        [Required(ErrorMessage = "Data de nascimento é Obrigatório")]
         public DateTime DtNascimento { get; set; }
+        
+        [Required(ErrorMessage = "Senha é Obrigatório")]
         public string Password { get; set; }
         public List<Playlist> Playlists { get; set; }
 
