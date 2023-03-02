@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Validations;
 using Repository;
+using Services.Usuario;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,32 +12,26 @@ namespace WebApi.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private SpotifyContext context;
+        private UsuarioService Service { get; set; }
 
-        public UsuariosController(SpotifyContext _context)
+        public UsuariosController(UsuarioService service)
         {
-            this.context = _context;
+            Service = service;
         }
 
         // GET: api/<UsuariosController>
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(this.context.Usuarios);
+            return Ok(this.Service.ObterUsuario());
         }
 
         // GET api/<UsuariosController>/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var user = this.context.Usuarios.FirstOrDefault(x => x.Id == id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
+            var user = this.Service.ObterUsuarioPorId(id);
+            return user != null ? Ok(user) : NotFound();
             
         }
 
@@ -46,44 +41,30 @@ namespace WebApi.Controllers
         {
             if (ModelState.IsValid == false)
                 return BadRequest(ModelState);
-
-            var user = this.context.Usuarios.FirstOrDefault(x => x.Email == usuario.Email);
-
-            if (user != null)
+            
+            try
             {
-                return UnprocessableEntity(new
-                {
-                    Errors = "Email já cadastrado na base de dados, por favor utilize outro"
-                });
+                var user = this.Service.SalvarUsuario(usuario);
+
+                return Created($"/usuarios/{user.Id}", user);
             }
-
-            this.context.Usuarios.Add(usuario);
-            this.context.SaveChanges();
-
-            return Created($"/usuarios/{usuario.Id}", usuario);
+            catch (Exception ex)
+            {
+                return UnprocessableEntity(ex);
+            }
         }
 
         // PUT api/<UsuariosController>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Usuario usuarioNew)
+        public IActionResult Put(int id, [FromBody] Usuario usuario)
         {
             if (ModelState.IsValid == false)
                 return BadRequest(ModelState);
 
-            var user = this.context.Usuarios.FirstOrDefault(x => x.Id == id);
-
-            if (user == null)
-            {
+            if (this.Service.ObterUsuarioPorId(id) == null)
                 return NotFound();
-            }
 
-            user.Nome = usuarioNew.Nome;
-            user.Email = usuarioNew.Email;
-            user.DtNascimento = usuarioNew.DtNascimento;
-            user.Password = usuarioNew.Password;
-
-            this.context.Usuarios.Update(user);
-            this.context.SaveChanges();
+            var user = this.Service.AtualizarUsuario(usuario);
 
             return Ok(user);
 
@@ -93,15 +74,12 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var user = this.context.Usuarios.FirstOrDefault(x => x.Id == id);
+            var user = this.Service.ObterUsuarioPorId(id);
 
             if (user == null)
-            {
                 return NotFound();
-            }
 
-            this.context.Usuarios.Remove(user);
-            this.context.SaveChanges();
+            this.Service.ExcluirUsuario(user);
 
             return NoContent();
 

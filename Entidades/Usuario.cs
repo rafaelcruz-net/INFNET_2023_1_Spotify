@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Text;
 
 namespace Entidades
 {
@@ -37,6 +38,11 @@ namespace Entidades
 
             this.Playlists.Add(play);
 
+        }
+
+        public void CriptografarPassword()
+        {
+            this.Password = Convert.ToBase64String(Encoding.Default.GetBytes(this.Password)); 
         }
 
         public void ExcluirPlaylist(Playlist playlist)
