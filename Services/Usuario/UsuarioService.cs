@@ -24,6 +24,7 @@ namespace Services.Usuario
             return context.Usuarios.Include(x => x.Playlists);
         }
 
+
         public Entidades.Usuario ObterUsuarioPorId(int id)
         {
             return context.Usuarios.Include(x => x.Playlists).FirstOrDefault(x => x.Id == id);

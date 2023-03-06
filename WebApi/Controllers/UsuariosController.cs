@@ -31,6 +31,7 @@ namespace WebApi.Controllers
         public IActionResult Get(int id)
         {
             var user = this.Service.ObterUsuarioPorId(id);
+
             return user != null ? Ok(user) : NotFound();
             
         }
