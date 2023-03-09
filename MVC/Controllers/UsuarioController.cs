@@ -1,6 +1,7 @@
 ﻿using Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace MVC.Controllers
@@ -49,10 +50,22 @@ namespace MVC.Controllers
         // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Usuario model)
         {
+            if (ModelState.IsValid == false)
+                return View(model);
+
             try
             {
+                var json = JsonSerializer.Serialize<Usuario>(model);
+                StringContent content = new StringContent(json, new MediaTypeHeaderValue("application/json"));
+
+                HttpClient httpClient = new HttpClient();
+                var response = httpClient.PostAsync($"https://localhost:7031/api/usuarios", content).Result;
+
+                if (response.IsSuccessStatusCode == false)
+                    throw new Exception("Erro ao tentar chamar a api do usuário");
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -64,16 +77,36 @@ namespace MVC.Controllers
         // GET: UsuarioController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            HttpClient httpClient = new HttpClient();
+            var response = httpClient.GetAsync($"https://localhost:7031/api/usuarios/{id}").Result;
+
+            if (response.IsSuccessStatusCode == false)
+                throw new Exception("Erro ao tentar chamar a api do usuário");
+
+            var jsonString = response.Content.ReadAsStringAsync().Result;
+
+            var result = JsonSerializer.Deserialize<Usuario>(jsonString);
+
+            return View(result);
         }
 
         // POST: UsuarioController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Usuario model)
         {
             try
             {
+                var json = JsonSerializer.Serialize<Usuario>(model);
+                StringContent content = new StringContent(json, new MediaTypeHeaderValue("application/json"));
+
+                HttpClient httpClient = new HttpClient();
+                var response = httpClient.PutAsync($"https://localhost:7031/api/usuarios/{id}", content).Result;
+
+                if (response.IsSuccessStatusCode == false)
+                    throw new Exception("Erro ao tentar chamar a api do usuário");
+
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -85,7 +118,17 @@ namespace MVC.Controllers
         // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            HttpClient httpClient = new HttpClient();
+            var response = httpClient.GetAsync($"https://localhost:7031/api/usuarios/{id}").Result;
+
+            if (response.IsSuccessStatusCode == false)
+                throw new Exception("Erro ao tentar chamar a api do usuário");
+
+            var jsonString = response.Content.ReadAsStringAsync().Result;
+
+            var result = JsonSerializer.Deserialize<Usuario>(jsonString);
+
+            return View(result);
         }
 
         // POST: UsuarioController/Delete/5
@@ -95,6 +138,12 @@ namespace MVC.Controllers
         {
             try
             {
+                HttpClient httpClient = new HttpClient();
+                var response = httpClient.DeleteAsync($"https://localhost:7031/api/usuarios/{id}").Result;
+
+                if (response.IsSuccessStatusCode == false)
+                    throw new Exception("Erro ao tentar chamar a api do usuário");
+
                 return RedirectToAction(nameof(Index));
             }
             catch
