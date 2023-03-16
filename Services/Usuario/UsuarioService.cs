@@ -14,7 +14,7 @@ namespace Services.Usuario
     {
         private SpotifyContext context;
 
-        public UsuarioService(SpotifyContext _context) 
+        public UsuarioService(SpotifyContext _context)
         {
             this.context = _context;
         }
@@ -34,9 +34,9 @@ namespace Services.Usuario
         {
             var user = this.context.Usuarios.FirstOrDefault(x => x.Email == usuario.Email);
 
-            if (user != null) 
+            if (user != null)
                 throw new BusinessException("Email já cadastrado na base de dados, por favor utilize outro");
-            
+
             //Cria a playlist do usuário ao criar
             usuario.CriarPlaylist("Musicas Favoritas", false);
 
@@ -74,5 +74,16 @@ namespace Services.Usuario
             this.context.SaveChanges();
         }
 
+        public Entidades.Usuario AutenticarUsuario(string email, string password)
+        {
+            var passwordEncoded = Convert.ToBase64String(Encoding.Default.GetBytes(password));
+
+            var user = this.context.Usuarios.FirstOrDefault(
+                    x => x.Email == email && x.Password == passwordEncoded
+                );
+
+            return user;
+
+        }
     }
 }
