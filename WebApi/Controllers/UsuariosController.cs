@@ -1,4 +1,5 @@
 ﻿using Entidades;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Validations;
 using Repository;
@@ -10,6 +11,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsuariosController : ControllerBase
     {
         private UsuarioService Service { get; set; }
@@ -21,6 +23,7 @@ namespace WebApi.Controllers
 
         // GET: api/<UsuariosController>
         [HttpGet]
+        
         public IActionResult Get()
         {
             return Ok(this.Service.ObterUsuario());

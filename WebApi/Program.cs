@@ -1,7 +1,11 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 using Repository;
 using Services.Usuario;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace WebApi
@@ -20,6 +24,24 @@ namespace WebApi
                                 c.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                             });
 
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(c =>
+            {
+                var key = Encoding.Default.GetBytes(builder.Configuration["TokenSecret"]);
+
+                c.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+                {
+                    ValidIssuer = "spotify-token",
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateAudience = false,
+                };
+            });
+            
+            
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -41,12 +63,12 @@ namespace WebApi
             }
 
             app.UseHttpsRedirection();
-
+                        
+            app.UseAuthentication();
             app.UseAuthorization();
 
-
             app.MapControllers();
-
+            
             app.Run();
         }
     }

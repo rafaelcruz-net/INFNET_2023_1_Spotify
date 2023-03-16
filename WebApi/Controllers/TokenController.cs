@@ -57,6 +57,7 @@ namespace WebApi.Controllers
             var securityToken = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(claims),
+
                 Issuer = "spotify-token",
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
