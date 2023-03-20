@@ -1,8 +1,11 @@
 ﻿using Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace MVC.Controllers
 {
@@ -11,8 +14,8 @@ namespace MVC.Controllers
         // GET: UsuarioController
         public ActionResult Index()
         {
-            HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ1c2VyQGFsLmluZm5ldC5lZHUuYnIiLCJuYW1lIjoiVGVzdGUgVXNlciIsIm5iZiI6MTY3OTMwODQyOCwiZXhwIjoxNjc5MzEwMjI4LCJpYXQiOjE2NzkzMDg0MjgsImlzcyI6InNwb3RpZnktdG9rZW4ifQ.fdC_3PPyo6WmSFjfbqMFITg9hzkZkquZ0P0AXs4SWH8");
+            var httpClient = PrepareRequest();
+
             var response = httpClient.GetAsync("https://localhost:7031/api/usuarios").Result;
 
             if (response.IsSuccessStatusCode == false)
@@ -28,8 +31,7 @@ namespace MVC.Controllers
         // GET: UsuarioController/Details/5
         public ActionResult Details(int id)
         {
-            HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ1c2VyQGFsLmluZm5ldC5lZHUuYnIiLCJuYW1lIjoiVGVzdGUgVXNlciIsIm5iZiI6MTY3OTMwODQyOCwiZXhwIjoxNjc5MzEwMjI4LCJpYXQiOjE2NzkzMDg0MjgsImlzcyI6InNwb3RpZnktdG9rZW4ifQ.fdC_3PPyo6WmSFjfbqMFITg9hzkZkquZ0P0AXs4SWH8");
+            var httpClient = PrepareRequest();
 
             var response = httpClient.GetAsync($"https://localhost:7031/api/usuarios/{id}").Result;
 
@@ -63,8 +65,8 @@ namespace MVC.Controllers
                 var json = JsonSerializer.Serialize<Usuario>(model);
                 StringContent content = new StringContent(json, new MediaTypeHeaderValue("application/json"));
 
-                HttpClient httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ1c2VyQGFsLmluZm5ldC5lZHUuYnIiLCJuYW1lIjoiVGVzdGUgVXNlciIsIm5iZiI6MTY3OTMwODQyOCwiZXhwIjoxNjc5MzEwMjI4LCJpYXQiOjE2NzkzMDg0MjgsImlzcyI6InNwb3RpZnktdG9rZW4ifQ.fdC_3PPyo6WmSFjfbqMFITg9hzkZkquZ0P0AXs4SWH8");
+                var httpClient = PrepareRequest();
+                
                 var response = httpClient.PostAsync($"https://localhost:7031/api/usuarios", content).Result;
 
                 if (response.IsSuccessStatusCode == false)
@@ -81,10 +83,9 @@ namespace MVC.Controllers
         // GET: UsuarioController/Edit/5
         public ActionResult Edit(int id)
         {
-            HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ1c2VyQGFsLmluZm5ldC5lZHUuYnIiLCJuYW1lIjoiVGVzdGUgVXNlciIsIm5iZiI6MTY3OTMwODQyOCwiZXhwIjoxNjc5MzEwMjI4LCJpYXQiOjE2NzkzMDg0MjgsImlzcyI6InNwb3RpZnktdG9rZW4ifQ.fdC_3PPyo6WmSFjfbqMFITg9hzkZkquZ0P0AXs4SWH8");
+            var httpClient = PrepareRequest();
+            
             var response = httpClient.GetAsync($"https://localhost:7031/api/usuarios/{id}").Result;
-           
 
             if (response.IsSuccessStatusCode == false)
                 throw new Exception("Erro ao tentar chamar a api do usuário");
@@ -106,8 +107,8 @@ namespace MVC.Controllers
                 var json = JsonSerializer.Serialize<Usuario>(model);
                 StringContent content = new StringContent(json, new MediaTypeHeaderValue("application/json"));
 
-                HttpClient httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ1c2VyQGFsLmluZm5ldC5lZHUuYnIiLCJuYW1lIjoiVGVzdGUgVXNlciIsIm5iZiI6MTY3OTMwODQyOCwiZXhwIjoxNjc5MzEwMjI4LCJpYXQiOjE2NzkzMDg0MjgsImlzcyI6InNwb3RpZnktdG9rZW4ifQ.fdC_3PPyo6WmSFjfbqMFITg9hzkZkquZ0P0AXs4SWH8");
+                var httpClient = PrepareRequest();
+              
                 var response = httpClient.PutAsync($"https://localhost:7031/api/usuarios/{id}", content).Result;
 
                 if (response.IsSuccessStatusCode == false)
@@ -125,8 +126,7 @@ namespace MVC.Controllers
         // GET: UsuarioController/Delete/5
         public ActionResult Delete(int id)
         {
-            HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ1c2VyQGFsLmluZm5ldC5lZHUuYnIiLCJuYW1lIjoiVGVzdGUgVXNlciIsIm5iZiI6MTY3OTMwODQyOCwiZXhwIjoxNjc5MzEwMjI4LCJpYXQiOjE2NzkzMDg0MjgsImlzcyI6InNwb3RpZnktdG9rZW4ifQ.fdC_3PPyo6WmSFjfbqMFITg9hzkZkquZ0P0AXs4SWH8");
+            var httpClient = PrepareRequest();
 
             var response = httpClient.GetAsync($"https://localhost:7031/api/usuarios/{id}").Result;
 
@@ -147,8 +147,8 @@ namespace MVC.Controllers
         {
             try
             {
-                HttpClient httpClient = new HttpClient();
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiZW1haWwiOiJ1c2VyQGFsLmluZm5ldC5lZHUuYnIiLCJuYW1lIjoiVGVzdGUgVXNlciIsIm5iZiI6MTY3OTMwODQyOCwiZXhwIjoxNjc5MzEwMjI4LCJpYXQiOjE2NzkzMDg0MjgsImlzcyI6InNwb3RpZnktdG9rZW4ifQ.fdC_3PPyo6WmSFjfbqMFITg9hzkZkquZ0P0AXs4SWH8");
+                var httpClient = PrepareRequest();
+
                 var response = httpClient.DeleteAsync($"https://localhost:7031/api/usuarios/{id}").Result;
 
                 if (response.IsSuccessStatusCode == false)
@@ -161,5 +161,44 @@ namespace MVC.Controllers
                 return View();
             }
         }
+
+        private string GetToken()
+        {
+            var user = new
+            {
+                email = "user_mvc@teste.com",
+                password = "123456"
+            };
+
+            var body = new StringContent(JsonSerializer.Serialize(user), new MediaTypeHeaderValue("application/json"));
+
+            HttpClient httpClient = new HttpClient();
+            var response = httpClient.PostAsync("https://localhost:7031/api/token", body).Result;
+
+            if (response.IsSuccessStatusCode == false)
+                throw new Exception("Erro ao tentar chamar a api do usuário");
+
+            var json = response.Content.ReadAsStringAsync().Result;
+
+            var token = JsonSerializer.Deserialize<Token>(json);
+
+            return token.AccessToken;
+        }
+
+        private HttpClient PrepareRequest()
+        {
+            var token = GetToken();
+
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            return httpClient;
+        }
+    }
+
+    public class Token
+    {
+        [JsonPropertyName("accessToken")]
+        public string AccessToken { get; set; }
     }
 }
