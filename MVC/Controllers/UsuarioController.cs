@@ -1,4 +1,5 @@
 ﻿using Entidades;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Common;
@@ -9,6 +10,7 @@ using System.Text.Json.Serialization;
 
 namespace MVC.Controllers
 {
+    [Authorize]
     public class UsuarioController : Controller
     {
         // GET: UsuarioController
