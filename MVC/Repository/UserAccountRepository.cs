@@ -1,10 +1,28 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MVC.Models.Account;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace MVC.Repository
 {
     public class UserAccountRepository : IUserStore<UserAccount>
     {
+
+        public Task<string?> GetNormalizedUserNameAsync(UserAccount user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Name);
+        }
+
+        public Task<string> GetUserIdAsync(UserAccount user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Id.ToString());
+        }
+
+        public Task<string?> GetUserNameAsync(UserAccount user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Name);
+        }
+
+        #region Metodos Nao Utilizados
         public Task<IdentityResult> CreateAsync(UserAccount user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -15,9 +33,14 @@ namespace MVC.Repository
             throw new NotImplementedException();
         }
 
-        public void Dispose()
+        public Task<IdentityResult> UpdateAsync(UserAccount user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            
         }
 
         public Task<UserAccount?> FindByIdAsync(string userId, CancellationToken cancellationToken)
@@ -26,21 +49,6 @@ namespace MVC.Repository
         }
 
         public Task<UserAccount?> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string?> GetNormalizedUserNameAsync(UserAccount user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetUserIdAsync(UserAccount user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string?> GetUserNameAsync(UserAccount user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -54,10 +62,7 @@ namespace MVC.Repository
         {
             throw new NotImplementedException();
         }
+        #endregion
 
-        public Task<IdentityResult> UpdateAsync(UserAccount user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

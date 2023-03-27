@@ -16,6 +16,7 @@ namespace MVC.Controllers
         // GET: UsuarioController
         public ActionResult Index()
         {
+
             var httpClient = PrepareRequest();
 
             var response = httpClient.GetAsync("https://localhost:7031/api/usuarios").Result;

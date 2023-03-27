@@ -5,17 +5,13 @@ namespace MVC.Repository
 {
     public class UserRoleRepository : IRoleStore<UserRole>
     {
+        #region Metodos não utilizados
         public Task<IdentityResult> CreateAsync(UserRole role, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
         public Task<IdentityResult> DeleteAsync(UserRole role, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dispose()
         {
             throw new NotImplementedException();
         }
@@ -59,5 +55,12 @@ namespace MVC.Repository
         {
             throw new NotImplementedException();
         }
+
+        public void Dispose()
+        {
+
+        }
+
+        #endregion
     }
 }

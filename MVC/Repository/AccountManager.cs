@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MVC.Models.Account;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MVC.Repository
 {
@@ -14,12 +17,24 @@ namespace MVC.Repository
 
         public async Task<SignInResult> Login(string email, string password)
         {
-            await SignInManager.SignInAsync(new UserAccount
-            {
+            var token = GetToken(email, password);
 
-            }, true);
+            if (string.IsNullOrEmpty(token) == true) 
+            {
+                return SignInResult.Failed;
+            }
+
+            var user = new UserAccount
+            {
+                Email = email,
+                Password = password,
+                Token = token
+            };
+
+            await SignInManager.SignInAsync(user, true);
 
             return SignInResult.Success;
+            
         }
 
         public async Task Logout()
@@ -27,8 +42,31 @@ namespace MVC.Repository
             await SignInManager.SignOutAsync();
         }
 
+        private string GetToken(string email, string password)
+        {
+            var user = new
+            {
+                email = email,
+                password = password
+            };
 
+            var body = new StringContent(JsonSerializer.Serialize(user), new MediaTypeHeaderValue("application/json"));
+
+            HttpClient httpClient = new HttpClient();
+            var response = httpClient.PostAsync("https://localhost:7031/api/token", body).Result;
+
+            if (response.IsSuccessStatusCode == false)
+                return String.Empty;
+
+            var json = response.Content.ReadAsStringAsync().Result;
+            var token = JsonSerializer.Deserialize<Token>(json);
+
+            return token.AccessToken;
+        }
     }
-
-
+}
+public class Token
+{
+    [JsonPropertyName("accessToken")]
+    public string AccessToken { get; set; }
 }

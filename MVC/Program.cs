@@ -18,6 +18,7 @@ namespace MVC
             //Adicionando ASP.NET Core Identity
             builder.Services.AddTransient<IUserStore<UserAccount>, UserAccountRepository>();
             builder.Services.AddTransient<IRoleStore<UserRole>, UserRoleRepository>();
+            
             builder.Services.AddTransient<IAccountManager, AccountManager>();
 
             builder.Services.AddIdentity<Models.Account.UserAccount, Models.Account.UserRole>()
