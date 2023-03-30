@@ -16,6 +16,8 @@ namespace MVC.Models.Account
 
         public string? Token { get; set; }
 
+        public bool AutenticacaoPersistente { get; set; }
+
         public int Id
         {
             get

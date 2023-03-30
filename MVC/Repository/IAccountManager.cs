@@ -4,7 +4,7 @@ namespace MVC.Repository
 {
     public interface IAccountManager
     {
-        Task<SignInResult> Login(string email, string password);
+        Task<SignInResult> Login(string email, string password, bool cookiePersistente = false);
         Task Logout();
     }
 }

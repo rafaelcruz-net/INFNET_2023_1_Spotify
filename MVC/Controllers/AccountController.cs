@@ -28,7 +28,7 @@ namespace MVC.Controllers
                 return View(userAccount);
             }
 
-            var result = this.accountManager.Login(userAccount.Email, userAccount.Password).Result;
+            var result = this.accountManager.Login(userAccount.Email, userAccount.Password, userAccount.AutenticacaoPersistente).Result;
 
             if (result.Succeeded)
             {

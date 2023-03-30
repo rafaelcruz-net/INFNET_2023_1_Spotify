@@ -17,7 +17,7 @@ namespace MVC.Repository
             HttpContext = httpContextAccessor.HttpContext;
         }
 
-        public async Task<SignInResult> Login(string email, string password)
+        public async Task<SignInResult> Login(string email, string password, bool cookiePersistente = false)
         {
             var token = GetToken(email, password);
 
@@ -33,7 +33,7 @@ namespace MVC.Repository
                 Token = token
             };
 
-            await SignInManager.SignInAsync(user, true);
+            await SignInManager.SignInAsync(user, cookiePersistente);
 
             //Grava o token na Sessão
             HttpContext.Session.SetString(UserAccount.SESSION_TOKEN_KEY, token);
