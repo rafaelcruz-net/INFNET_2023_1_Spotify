@@ -41,6 +41,7 @@ namespace WebApi.Controllers
 
         // POST api/<UsuariosController>
         [HttpPost]
+        [AllowAnonymous]
         public IActionResult Post([FromBody] Usuario usuario)
         {
             if (ModelState.IsValid == false)

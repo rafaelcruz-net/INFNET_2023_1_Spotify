@@ -50,6 +50,7 @@ namespace MVC.Controllers
 
         }
 
+        [AllowAnonymous]
         // GET: UsuarioController/Create
         public ActionResult Create()
         {
@@ -59,6 +60,7 @@ namespace MVC.Controllers
         // POST: UsuarioController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public ActionResult Create(Usuario model)
         {
             if (ModelState.IsValid == false)
@@ -168,10 +170,11 @@ namespace MVC.Controllers
 
         private HttpClient PrepareRequest()
         {
-            var token = this.HttpContext.Session.GetString(UserAccount.SESSION_TOKEN_KEY);
-
             var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {token}");
+
+            var token = this.HttpContext.Session.GetString(UserAccount.SESSION_TOKEN_KEY);
+            if (string.IsNullOrEmpty(token) == false)
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {token}");
 
             return httpClient;
         }
