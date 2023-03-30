@@ -5,7 +5,8 @@ namespace MVC.Models.Account
 {
     public class UserAccount
     {
-        
+        public const string SESSION_TOKEN_KEY = "UserAccountToken";
+
         [Required(ErrorMessage = "Email é obrigatório")]
         [EmailAddress(ErrorMessage = "Formato do email inválido")]
         public String Email { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MVC.Models.Account;
 using NuGet.Common;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -165,43 +166,14 @@ namespace MVC.Controllers
             }
         }
 
-        private string GetToken()
-        {
-            var user = new
-            {
-                email = "user_mvc@teste.com",
-                password = "123456"
-            };
-
-            var body = new StringContent(JsonSerializer.Serialize(user), new MediaTypeHeaderValue("application/json"));
-
-            HttpClient httpClient = new HttpClient();
-            var response = httpClient.PostAsync("https://localhost:7031/api/token", body).Result;
-
-            if (response.IsSuccessStatusCode == false)
-                throw new Exception("Erro ao tentar chamar a api do usuário");
-
-            var json = response.Content.ReadAsStringAsync().Result;
-
-            var token = JsonSerializer.Deserialize<Token>(json);
-
-            return token.AccessToken;
-        }
-
         private HttpClient PrepareRequest()
         {
-            var token = GetToken();
+            var token = this.HttpContext.Session.GetString(UserAccount.SESSION_TOKEN_KEY);
 
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"Bearer {token}");
 
             return httpClient;
         }
-    }
-
-    public class Token
-    {
-        [JsonPropertyName("accessToken")]
-        public string AccessToken { get; set; }
     }
 }

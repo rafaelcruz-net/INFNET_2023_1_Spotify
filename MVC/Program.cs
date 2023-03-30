@@ -32,6 +32,9 @@ namespace MVC
                 config.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
             });
 
+            //Adicionando serviço de Sessão
+            builder.Services.AddSession();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -49,6 +52,9 @@ namespace MVC
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //Ligando a sessão
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",

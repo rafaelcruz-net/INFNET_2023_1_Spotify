@@ -9,10 +9,12 @@ namespace MVC.Repository
     public class AccountManager : IAccountManager
     {
         private SignInManager<UserAccount> SignInManager { get; set; }
+        private HttpContext HttpContext { get; set; }
 
-        public AccountManager(SignInManager<UserAccount> signInManager)
+        public AccountManager(SignInManager<UserAccount> signInManager, IHttpContextAccessor httpContextAccessor)
         {
             SignInManager = signInManager;
+            HttpContext = httpContextAccessor.HttpContext;
         }
 
         public async Task<SignInResult> Login(string email, string password)
@@ -32,6 +34,9 @@ namespace MVC.Repository
             };
 
             await SignInManager.SignInAsync(user, true);
+
+            //Grava o token na Sessão
+            HttpContext.Session.SetString(UserAccount.SESSION_TOKEN_KEY, token);
 
             return SignInResult.Success;
             
