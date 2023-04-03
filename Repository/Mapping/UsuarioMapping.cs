@@ -24,6 +24,11 @@ namespace Repository.Mapping
             builder.Property(x => x.Password)
                     .IsRequired().HasMaxLength(200);
 
+            builder.Property(x => x.Perfil)
+                   .HasDefaultValue(RoleEnum.Usuario);
+                    
+
+
             builder.HasMany(x => x.Playlists).WithOne(x => x.Usuario);
         }
     }

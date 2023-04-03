@@ -11,7 +11,7 @@ using System.Text.Json.Serialization;
 
 namespace MVC.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Usuario,Administrador")]
     public class UsuarioController : Controller
     {
         // GET: UsuarioController
@@ -130,6 +130,8 @@ namespace MVC.Controllers
         }
 
         // GET: UsuarioController/Delete/5
+
+        [Authorize(Roles = "Administrador")]
         public ActionResult Delete(int id)
         {
             var httpClient = PrepareRequest();

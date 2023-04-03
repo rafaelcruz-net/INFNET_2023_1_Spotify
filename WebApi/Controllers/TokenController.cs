@@ -47,7 +47,8 @@ namespace WebApi.Controllers
             {
                 new Claim("sub", user.Id.ToString()),
                 new Claim("email", user.Email),
-                new Claim("name", user.Nome)
+                new Claim("name", user.Nome),
+                new Claim("role", user.Perfil.ToString())
             };
 
             var key = Encoding.Default.GetBytes(this.Configuration["TokenSecret"]);

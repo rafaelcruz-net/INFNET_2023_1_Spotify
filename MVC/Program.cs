@@ -30,6 +30,7 @@ namespace MVC
                 config.AccessDeniedPath = "/Account/AccessDenied";
                 config.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 config.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                
             });
 
             //Adicionando serviço de Sessão

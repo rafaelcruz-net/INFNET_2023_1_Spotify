@@ -35,6 +35,9 @@ namespace Entidades
         [JsonPropertyName("playlist")]
         public List<Playlist> Playlists { get; set; }
 
+        [JsonPropertyName("perfil")]
+        public RoleEnum Perfil { get; set; } = RoleEnum.Usuario;
+
         public void CriarPlaylist(string nome, bool isPublic)
         {
             var play = new Playlist()
@@ -45,7 +48,6 @@ namespace Entidades
             };
 
             this.Playlists.Add(play);
-
         }
 
         public void CriptografarPassword()

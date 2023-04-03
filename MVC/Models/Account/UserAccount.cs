@@ -43,6 +43,18 @@ namespace MVC.Models.Account
             }
         }
 
+        public string Perfil
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Token))
+                    return String.Empty;
+
+                var jwt = this.DecodeToken(Token);
+                return jwt.Claims.First(x => x.Type == "role").Value;
+            }
+        }
+
         private JwtSecurityToken DecodeToken(string token)
         {
             var handler = new JwtSecurityTokenHandler();

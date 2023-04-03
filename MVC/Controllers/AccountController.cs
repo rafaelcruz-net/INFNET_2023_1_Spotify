@@ -48,5 +48,10 @@ namespace MVC.Controllers
             this.accountManager.Logout();
             return RedirectToAction("Login");
         }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }
